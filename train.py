@@ -12,6 +12,19 @@ import argparse
 import torch
 from dataclasses import dataclass
 from typing import Any, Dict, List, Union
+from evaluate import load
+from datasets import load_dataset, concatenate_datasets
+
+def map_to_pred(batch):
+    audio = batch["audio"]
+    input_features = processor(audio["array"], sampling_rate=audio["sampling_rate"], return_tensors="pt").input_features
+    batch["reference"] = processor.tokenizer._normalize(batch['text'])
+
+    with torch.no_grad():
+        predicted_ids = model.generate(input_features)[0]
+    transcription = processor.decode(predicted_ids)
+    batch["prediction"] = processor.tokenizer._normalize(transcription)
+    return batch
 
 
 @dataclass
@@ -159,4 +172,26 @@ if __name__ == "__main__":
 
 
     trainer.train()
+    print("Training finished \n\n\n")
+
+    trained_model = WhisperForConditionalGeneration.from_pretrained(path_model)
+
+    if isinstance(stt_data, list):
+        all_ds = []
+        for stt_data_file in stt_data:
+            ds = load_dataset(stt_data_file, split="test")
+            all_ds.append(ds)
+        final_ds = concatenate_datasets(all_ds)
+        print(final_ds)
+
+        result = final_ds.map(map_to_pred)
+    
+    else:
+        final_ds = load_dataset(stt_data, split="test")
+        result = final_ds.map(map_to_pred)
+
+    wer = load("wer")
+    wer_result = (100 * wer.compute(references=result["reference"], predictions=result["prediction"]))
+
+    print(f"Word Error Rate: {wer_result}")
 

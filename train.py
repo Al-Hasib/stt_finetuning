@@ -111,9 +111,11 @@ if __name__ == "__main__":
     model.generation_config.task = "transcribe"
     model.generation_config.forced_decoder_ids = None
     metric = evaluate.load("wer")
+    print("parameter loading done")
 
     data_processing = processing(stt_data, feature_extractor,tokenizer)
     train_dataset, valid_dataset, test_dataset = data_processing.load_data()
+    print('dataset loading successful')
 
     data_collator = DataCollatorSpeechSeq2SeqWithPadding(
     processor=processor,

@@ -4,9 +4,24 @@ from exception import customexception
 import sys
 from datasets import Audio
 
+
+
 class processor:
-    def __init__(self, data_path):
+    def __init__(self, data_path,feature_extractor,tokenizer):
+        self.feature_extractor = feature_extractor
+        self.tokenizer = tokenizer
         self.data_path = data_path
+
+    def _prepare_dataset(self, batch):
+        # load and resample audio data from 48 to 16kHz
+        audio = batch["audio"]
+
+        # compute log-Mel input features from input audio array 
+        batch["input_features"] = self.feature_extractor(audio["array"], sampling_rate=audio["sampling_rate"]).input_features[0]
+
+        # encode target text to label ids 
+        batch["labels"] = self.tokenizer(batch["text"]).input_ids
+        return batch
         
 
     def load_data(self):
@@ -30,18 +45,42 @@ class processor:
                 concatenate_valid = concatenate_datasets(valid_dataset)
                 concatenate_test = concatenate_datasets(test_dataset)
 
-                train_dataset_casting
+                logging.info("concatenation completed")
+                
+                train_dataset_casting = concatenate_train.cast_column("audio", Audio(sampling_rate=16000))
+                valid_dataset_casting = concatenate_valid.cast_column("audio", Audio(sampling_rate=16000))
+                test_dataset_casting = concatenate_test.cast_column("audio", Audio(sampling_rate=16000))
 
-                logging.info("Concatenation & data loading complete")
-                return concatenate_train, concatenate_valid, concatenate_test
+                logging.info("casting completed")
+
+                prepare_train = train_dataset_casting.map(self._prepare_dataset, remove_columns=train_dataset_casting.column_names, num_proc=4)
+                prepare_valid = valid_dataset_casting.map(self._prepare_dataset, remove_columns=valid_dataset_casting.column_names, num_proc=4)
+                prepare_test = test_dataset_casting.map(self._prepare_dataset, remove_columns=test_dataset_casting.column_names, num_proc=4)
+
+
+                logging.info("data loading complete")
+                return prepare_train, prepare_valid, prepare_test
             else:
                 dataset = load_dataset(self.data_path)
                 train_dataset = dataset['train']
                 valid_dataset = dataset['validation']
                 test_dataset = dataset['test']
-                
+
+                train_dataset_casting = train_dataset.cast_column("audio", Audio(sampling_rate=16000))
+                valid_dataset_casting = valid_dataset.cast_column("audio", Audio(sampling_rate=16000))
+                test_dataset_casting = test_dataset.cast_column("audio", Audio(sampling_rate=16000))
+
+                logging.info("casting completed")
+
+                prepare_train = train_dataset_casting.map(self._prepare_dataset, remove_columns=train_dataset_casting.column_names, num_proc=4)
+                prepare_valid = valid_dataset_casting.map(self._prepare_dataset, remove_columns=valid_dataset_casting.column_names, num_proc=4)
+                prepare_test = test_dataset_casting.map(self._prepare_dataset, remove_columns=test_dataset_casting.column_names, num_proc=4)
+
+
                 logging.info("data loading complete")
-                return train_dataset, valid_dataset, test_dataset
+                return prepare_train, prepare_valid, prepare_test
+                
+
 
         except Exception as e:
             logging.info("Problem arise in the data processing")

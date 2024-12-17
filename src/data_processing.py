@@ -6,7 +6,7 @@ from datasets import Audio
 
 
 
-class processor:
+class processing:
     def __init__(self, data_path,feature_extractor,tokenizer):
         self.feature_extractor = feature_extractor
         self.tokenizer = tokenizer
@@ -88,11 +88,24 @@ class processor:
 
 
     
-if __name__=="__main__":
-    print("Starting...")
-    p1 = processor(["crtvai/jordan-dataset-v21","crtvai/jordan-dataset-v21"])
-    train, valid, test = p1.load_data()
-    print(train, valid, test)
+# if __name__=="__main__":
+#     print("Starting...")
+#     from transformers import WhisperFeatureExtractor
+#     from transformers import WhisperTokenizer
+#     from transformers import WhisperProcessor
+#     from transformers import WhisperForConditionalGeneration
+#     import evaluate
+#     from transformers import Seq2SeqTrainingArguments
+#     from transformers import Seq2SeqTrainer
+
+
+#     feature_extractor = WhisperFeatureExtractor.from_pretrained("openai/whisper-large-v3-turbo")
+#     tokenizer = WhisperTokenizer.from_pretrained("whisper-large-v3-turbo_2/checkpoint-5000", language="Arabic", task="transcribe")
+#     processor = WhisperProcessor.from_pretrained("whisper-large-v3-turbo_2/checkpoint-5000", language="Arabic", task="transcribe")
+#     model = WhisperForConditionalGeneration.from_pretrained("whisper-large-v3-turbo_2/checkpoint-5000")
+#     p1 = processor(["crtvai/jordan-dataset-v21","crtvai/jordan-dataset-v21"])
+#     train, valid, test = p1.load_data()
+#     print(train, valid, test)
 
 
 # stt_data_21 = load_dataset('crtvai/jordan-dataset-v21')

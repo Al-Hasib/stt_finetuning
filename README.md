@@ -1,5 +1,8 @@
-# stt_finetuning
+For Training,
 
-!pip install --upgrade pip
-
-pip install -r requirements.txt
+```python
+!python setup.py
+```
+```python
+!python train.py "dataset_name"
+```

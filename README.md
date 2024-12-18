@@ -1,12 +1,8 @@
-### Install all the requirements
+## Fine Tuning STT(Speech to Text)
+* The Script will train at 12 am everyday.
+* It will take the new dataset automatically
+* Update the model
+
 ```python
 !python setup.py
-```
-### Fine tune the model
-It can contain both single dataset or multiple dataset
-```python
-# single dataset
-!python train.py "dataset_name"
-# multiple dataset
-!python train.py "dataset1" "dataset2" "dataset3"
 ```

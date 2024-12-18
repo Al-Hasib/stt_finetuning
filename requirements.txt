@@ -7,3 +7,5 @@ tensorboard
 gradio
 librosa 
 soundfile
+requests 
+beautifulsoup4

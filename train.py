@@ -14,6 +14,8 @@ from dataclasses import dataclass
 from typing import Any, Dict, List, Union
 from evaluate import load
 from datasets import load_dataset, concatenate_datasets
+from src.extract_dataset import ExtractNewDataset
+
 
 def map_to_pred(batch):
     audio = batch["audio"]
@@ -55,14 +57,14 @@ class DataCollatorSpeechSeq2SeqWithPadding:
 
         return batch
 
-def parse_input():
-    parser = argparse.ArgumentParser(description="input as a string or a list of strings.")
-    # Use nargs='+' to accept one or more arguments (as a list)
-    parser.add_argument('input', type=str, nargs='+', help="name of datasets")
-    # Parse the arguments
-    args = parser.parse_args()
-    # If only one value is provided, it will be a string; if multiple values, it will be a list
-    return args.input
+# def parse_input():
+#     parser = argparse.ArgumentParser(description="input as a string or a list of strings.")
+#     # Use nargs='+' to accept one or more arguments (as a list)
+#     parser.add_argument('input', type=str, nargs='+', help="name of datasets")
+#     # Parse the arguments
+#     args = parser.parse_args()
+#     # If only one value is provided, it will be a string; if multiple values, it will be a list
+#     return args.input
 
 
 
@@ -104,7 +106,10 @@ def compute_metrics(pred):
 
 # Example usage
 if __name__ == "__main__":
-    user_input = parse_input()
+    # user_input = parse_input()
+    extract_dataset = ExtractNewDataset()
+    user_input = extract_dataset.get_new_items()
+    print(user_input)
     
     # Check if the input is a list or a simple string
     if len(user_input) == 1:

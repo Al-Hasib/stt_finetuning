@@ -5,11 +5,11 @@ import json
 import pandas as pd
 import os
 
-class FetchData:
-    def __init__(self, video_url):
-        self.video_url = video_url
-    
-    def fetch_transcription(video_url, json_file, file_counter):
+os.makedirs("csvFiles", exist_ok=True)
+
+class fetchData:
+    # Function to fetch and parse transcription data from subtitles
+    def fetch_transcription(self, video_url, json_file, file_counter):
         transcription = []
 
         try:
@@ -69,3 +69,20 @@ class FetchData:
             logging.error(f"An error occurred during subtitle processing: {e}")
 
         return transcription
+
+
+    # ============================ Save final dataset to CSV ================================
+    def save_to_csv(self, data, base_stt_dataset_path="csvFiles/stt_dataset.csv"):
+        df = pd.DataFrame(data)
+
+        # Check if the CSV file already exists and increment the counter for CSV file if necessary
+        csv_counter = 1
+        stt_dataset_path = base_stt_dataset_path
+        while os.path.exists(stt_dataset_path):
+            stt_dataset_path = f"csvFiles/stt_dataset_{csv_counter}.csv"
+            csv_counter += 1
+
+        df.to_csv(stt_dataset_path, index=False)
+
+        # Print out where the files have been saved
+        logging.info(f"Processed audio chunks and transcriptions saved to {stt_dataset_path}")

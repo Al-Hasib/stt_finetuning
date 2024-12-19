@@ -7,7 +7,7 @@ import os
 import shutil
 import logging
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from processaudio import process_video
+from stt_data.processing import processAudio
 
 
 
@@ -130,7 +130,7 @@ class utils:
         Process a single video URL and return the transcription.
         """
         try:
-            transcription = process_video(video_url, file_counter)
+            transcription = processAudio.process_video(video_url, file_counter)
             logging.info(f"Completed processing for video {file_counter}: {video_url}")
             return file_counter, transcription  # Return the index and transcription
         except Exception as e:

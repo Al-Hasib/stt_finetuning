@@ -5,7 +5,7 @@ import yt_dlp
 from pydub import AudioSegment
 import logging
 import pandas as pd
-from datafetch import fetch_transcription
+from stt_data.fetch import fetchData
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
 
@@ -72,7 +72,7 @@ class processAudio:
 
         # If transcription file does not exist, fetch transcription data
         if not transcription:
-            transcription = fetch_transcription(video_url, json_file, file_counter)
+            transcription = fetchData.fetch_transcription(video_url, json_file, file_counter)
 
         return transcription
 

@@ -1,0 +1,17 @@
+# !pip install youtube_transcript_api
+# !pip install pytube # Install the missing library 'pytube'
+# !pip install pydub
+# !pip install --upgrade pytube
+# !pip install --upgrade youtube-transcript-api pytube pydub
+# !pip install --upgrade pytube youtube-transcript-api
+# !pip install yt-dlp
+# !pip install --upgrade yt-dlp
+# !yt-dlp -U
+# !pip install --upgrade --force-reinstall yt-dlp
+# conda install -c conda-forge ffmpeg
+# pip install pandas
+# !pip install huggingface_hub
+# !pip install datasets
+# !pip install num2words
+
+Python 3.10.13

@@ -1,0 +1,16 @@
+# Exclude environment variable files
+.env
+__pycache__/
+*.log
+
+# Exclude compiled Python files
+libs/__pycache__/
+libs/wavfiles/
+libs/jsonfiles/
+libs/csvFiles/
+libs/video_wavfiles/
+libs/video_libs/
+
+# Exclude specific files
+video_url.txt
+saved_video_url.txt
